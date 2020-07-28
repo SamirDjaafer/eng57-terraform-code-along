@@ -169,7 +169,7 @@ data "template_file" "initapp" {
 
 # Creating an ec2 instance IMAGE with our app
 resource "aws_instance" "Web" {
-  ami           = "ami-00b48f09c568b0014"
+  ami           = "ami-0d12d0d033de9d75d"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.subpublic.id
   vpc_security_group_ids = [aws_security_group.sgapp.id]
