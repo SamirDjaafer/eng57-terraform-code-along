@@ -1,1 +1,4 @@
 .terraform/
+secrets.tf
+.idea
+

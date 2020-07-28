@@ -4,10 +4,10 @@ provider "aws" {
 
 # Creating a vpc
 resource "aws_vpc" "mainvpc" {
-  cidr_block = "13.0.0.0/16"
+  cidr_block = "23.0.0.0/16"
   tags = {
 
-    Name = "Eng57.fp.tf.vpc"
+    Name = "${var.name}tf.vpc"
   }
 }
 
@@ -22,12 +22,12 @@ resource "aws_internet_gateway" "gw" {
 # Create public sub
 resource "aws_subnet" "subpublic" {
   vpc_id     = aws_vpc.mainvpc.id
-  cidr_block = "13.0.1.0/24"
+  cidr_block = "23.0.1.0/24"
   availability_zone = "eu-west-1b"
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "${var.name} sub.public"
+    Name = "${var.name}sub.public"
   }
 }
 
@@ -61,6 +61,14 @@ resource "aws_security_group" "sgapp" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "httpx from VPC"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["${var.my-ip}"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -69,7 +77,7 @@ resource "aws_security_group" "sgapp" {
   }
 
   tags = {
-    Name = "Eng57.fp.sg.app"
+    Name = "${var.name}sg.app"
   }
 }
 
@@ -85,6 +93,15 @@ resource "aws_network_acl" "naclpublic" {
     cidr_block = "0.0.0.0/0"
     from_port  = 80
     to_port    = 80
+  }
+
+  ingress {
+    rule_no     = 110
+    action      = "allow"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_block = "${var.my-ip}"
   }
 
   ingress {
@@ -119,7 +136,7 @@ resource "aws_network_acl" "naclpublic" {
   subnet_ids = [aws_subnet.subpublic.id]
 
   tags = {
-    Name = "Eng57.fp.nacls.public"
+    Name = "${var.name}nacls.public"
   }
 }
 
@@ -131,7 +148,7 @@ resource "aws_route_table" "routepublic" {
     gateway_id = aws_internet_gateway.gw.id
   }
   tags = {
-    Name = "Eng57.fp.route.public"
+    Name = "${var.name}route.public"
   }
 }
 
@@ -159,7 +176,7 @@ resource "aws_instance" "Web" {
   associate_public_ip_address = true
   user_data = data.template_file.initapp.rendered
   tags = {
-    Name = "Eng57.filipe.paiva.tf.app"
+    Name = "${var.name}tf.app"
   }
 }
 
