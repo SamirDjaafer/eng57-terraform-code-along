@@ -36,6 +36,16 @@ Example usage:
 
 
 
+# Terraform Modules
+
+1. `mkdir modules`
+2. `cd modules`
+3. `touch app tier`
+4. in app tier `touch main.tf outputs.tf variables.tf`
+
+
+
+
 Example usage:
 1) Automation server gets triggered
 2) Test are run in machine created from AMI (configuration)
