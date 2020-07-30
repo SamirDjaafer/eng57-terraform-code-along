@@ -24,7 +24,7 @@ resource "aws_security_group" "sgdb" {
     to_port     = 27017
     protocol    = "tcp"
 //    cidr_blocks = ["23.0.1.0/24"]
-    security_groups = [module.]
+    security_groups = [var.sg-app]
   }
 
   egress {
@@ -41,7 +41,7 @@ resource "aws_security_group" "sgdb" {
 
 # Create private NACL
 resource "aws_network_acl" "naclprivate" {
-  vpc_id = aws_vpc.mainvpc.id
+  vpc_id = var.vpc_id
 
   # traffic on por 80 allow
   egress {
@@ -59,7 +59,7 @@ resource "aws_network_acl" "naclprivate" {
     from_port   = 27017
     to_port     = 27017
     protocol    = "tcp"
-    cidr_block = module.app_tier.subpublic_cidr_block
+    cidr_block = var.subpublic_cidr_block
   }
 
   subnet_ids = [aws_subnet.subprivate.id]

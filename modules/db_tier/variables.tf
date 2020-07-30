@@ -13,3 +13,13 @@ variable "my_ip" {
 variable "internet_gateway_id" {
   description = "Our igw id"
 }
+
+variable "sg-app" {
+  description = "App tier's security group"
+}
+
+variable "subpublic_cidr_block" {
+  description = "Public subnets cidr block"
+}
+
+
